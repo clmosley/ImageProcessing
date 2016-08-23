@@ -9,49 +9,58 @@
 import UIKit
 import AVFoundation
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
-    let captureSession = AVCaptureSession()
-    
-    // If we find a device we'll store it here for later use
-    var captureDevice : AVCaptureDevice?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        captureSession.sessionPreset = AVCaptureSessionPresetLow
-        let devices = AVCaptureDevice.devices()
-        print(devices)
-        
-        // Loop through all the capture devices on this phone
-        for device in devices {
-            // Make sure this particular device supports video
-            if (device.hasMediaType(AVMediaTypeVideo)) {
-                // Finally check the position and confirm we've got the back camera
-                if(device.position == AVCaptureDevicePosition.Back) {
-                    captureDevice = device as? AVCaptureDevice
-                }
-            }
-        }
-        if captureDevice != nil {
-            beginSession()
-        }
     }
     
-    func beginSession() {
-//        var err : NSError? = nil
-        do {
-            try self.captureSession.addInput(AVCaptureDeviceInput(device: self.captureDevice))
-        } catch {
-//            print("error: \(err)")
-            print("There was an error")
-        }
-        
-        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        self.view.layer.addSublayer(previewLayer)
-        previewLayer?.frame = self.view.layer.frame
-        captureSession.startRunning()
+    override func viewDidAppear(animated: Bool) {
+        startCameraControllerFromViewController(self, usingDelegate: self)
     }
+    
+    func startCameraControllerFromViewController(controller : UIViewController?,
+                                     usingDelegate delegate : protocol<UIImagePickerControllerDelegate,
+                                                              UINavigationControllerDelegate>?) -> Bool
+    {
+        if UIImagePickerController
+            .isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) == false
+            || (delegate == nil)
+            || (controller == nil) {
+                return false
+        }
+        let cameraUI = UIImagePickerController()
+        cameraUI.sourceType = UIImagePickerControllerSourceType.Camera
+        
+        //displays a controll that allows the user to choose picture or
+        //movie capture, if both are available
+        cameraUI.mediaTypes = UIImagePickerController
+                              .availableMediaTypesForSourceType(UIImagePickerControllerSourceType.Camera)!
+        
+        //hides the controls for moving and scaling pictures, or for
+        //trimming movies.
+        cameraUI.allowsEditing = false
+        cameraUI.delegate = delegate
+        
+        controller?.presentViewController(cameraUI, animated: true, completion: nil)
+        return true
+    }
+
+    
+//    func beginSession() {
+////        var err : NSError? = nil
+//        do {
+//            try self.captureSession.addInput(AVCaptureDeviceInput(device: self.captureDevice))
+//        } catch {
+////            print("error: \(err)")
+//            print("There was an error")
+//        }
+//        
+//        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+//        self.view.layer.addSublayer(previewLayer)
+//        previewLayer?.frame = self.view.layer.frame
+//        captureSession.startRunning()
+//    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
