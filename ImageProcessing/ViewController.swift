@@ -46,22 +46,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return true
     }
 
-    
-//    func beginSession() {
-////        var err : NSError? = nil
-//        do {
-//            try self.captureSession.addInput(AVCaptureDeviceInput(device: self.captureDevice))
-//        } catch {
-////            print("error: \(err)")
-//            print("There was an error")
-//        }
-//        
-//        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-//        self.view.layer.addSublayer(previewLayer)
-//        previewLayer?.frame = self.view.layer.frame
-//        captureSession.startRunning()
-//    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
