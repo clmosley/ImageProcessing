@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import CoreImage
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -77,10 +78,23 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 //        UIImageWriteToSavedPhotosAlbum(originalImage!, nil, nil, nil)
         if let originalImage = originalImage {
             pictures.append(originalImage)
-            displayPicture.image = originalImage
+            let filteredImage = processImage(originalImage)
+            displayPicture.image = UIImage(CGImage: filteredImage)
         }
         
         picker.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func processImage(image : UIImage) -> CGImageRef {
+        let context : CIContext = CIContext()
+        let intermediateImage : CIImage? = CIImage(image: image)
+        let filter : CIFilter? = CIFilter(name: "CIEdgeWork")
+        filter?.setValue(intermediateImage, forKey: kCIInputImageKey)
+        filter?.setValue(4.0, forKey: kCIInputRadiusKey)
+        let resultImage : CIImage = (filter?.valueForKey(kCIOutputImageKey))! as! CIImage
+        let extent : CGRect = resultImage.extent
+        let returnImage : CGImageRef = context.createCGImage(resultImage, fromRect: extent)
+        return returnImage
     }
 
 }
