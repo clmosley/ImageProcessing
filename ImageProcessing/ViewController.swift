@@ -14,6 +14,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     //container for UIImages
     var pictures : [UIImage] = [UIImage]()
 
+    @IBOutlet weak var displayPicture: UIImageView!
+    
     @IBAction func cameraButton(sender: UIButton) {
         if !startCameraControllerFromViewController(self, usingDelegate: self) {
             print("Camera not available")
@@ -75,6 +77,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 //        UIImageWriteToSavedPhotosAlbum(originalImage!, nil, nil, nil)
         if let originalImage = originalImage {
             pictures.append(originalImage)
+            displayPicture.image = originalImage
         }
         
         picker.dismissViewControllerAnimated(true, completion: nil)

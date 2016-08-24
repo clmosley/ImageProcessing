@@ -3,6 +3,8 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -17,16 +19,38 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IYw-4B-2xC">
-                                <rect key="frame" x="267" y="285" width="67" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IYw-4B-2xC">
+                                <rect key="frame" x="273" y="20" width="54" height="30"/>
                                 <state key="normal" title="Camera"/>
                                 <connections>
                                     <action selector="cameraButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="GDI-Ed-d6H"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="H9A-c5-HLB">
+                                <rect key="frame" x="20" y="100" width="560" height="747"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="H9A-c5-HLB" secondAttribute="height" multiplier="3:4" id="ySv-tM-65I"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="IYw-4B-2xC" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="W3C-f9-Gtq"/>
+                            <constraint firstItem="H9A-c5-HLB" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="qQo-T5-2Yj"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="H9A-c5-HLB" secondAttribute="trailing" id="r9E-LR-op5"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="H9A-c5-HLB" secondAttribute="bottom" id="tQW-6W-8oU"/>
+                            <constraint firstItem="H9A-c5-HLB" firstAttribute="top" secondItem="IYw-4B-2xC" secondAttribute="bottom" constant="50" id="wQP-lD-shu"/>
+                            <constraint firstItem="IYw-4B-2xC" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wRO-JU-PdH"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="tQW-6W-8oU"/>
+                            </mask>
+                        </variation>
                     </view>
+                    <connections>
+                        <outlet property="displayPicture" destination="H9A-c5-HLB" id="ezC-c8-tgg"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
