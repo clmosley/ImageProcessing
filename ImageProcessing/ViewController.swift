@@ -10,13 +10,18 @@ import UIKit
 import AVFoundation
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    //container for UIImages
+    var pictures : [UIImage] = [UIImage]()
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    @IBAction func cameraButton(sender: UIButton) {
+        if !startCameraControllerFromViewController(self, usingDelegate: self) {
+            print("Camera not available")
+        }
     }
     
-    override func viewDidAppear(animated: Bool) {
-        startCameraControllerFromViewController(self, usingDelegate: self)
+    override func viewDidLoad() {
+        super.viewDidLoad()
     }
     
     func startCameraControllerFromViewController(controller : UIViewController?,
@@ -32,10 +37,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let cameraUI = UIImagePickerController()
         cameraUI.sourceType = UIImagePickerControllerSourceType.Camera
         
-        //displays a controll that allows the user to choose picture or
-        //movie capture, if both are available
-        cameraUI.mediaTypes = UIImagePickerController
-                              .availableMediaTypesForSourceType(UIImagePickerControllerSourceType.Camera)!
+        //displays a controll that allows the user to take a picture only
+        let mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(cameraUI.sourceType)
+        if let mediaTypes = mediaTypes {
+            for type in mediaTypes {
+                if type == "public.image" {
+                    cameraUI.mediaTypes = ["public.image"]
+                    break 
+                }
+            }
+        }
         
         //hides the controls for moving and scaling pictures, or for
         //trimming movies.
@@ -51,6 +62,23 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // Dispose of any resources that can be recreated.
     }
 
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        let mediaType : String = info[UIImagePickerControllerMediaType] as! String
+        var originalImage : UIImage? = nil
+        
+        //handle still image capture
+        if mediaType == "public.image" {
+            originalImage = info[UIImagePickerControllerOriginalImage] as? UIImage
+        }
+        
+        //save the new image to the Camera Roll
+//        UIImageWriteToSavedPhotosAlbum(originalImage!, nil, nil, nil)
+        if let originalImage = originalImage {
+            pictures.append(originalImage)
+        }
+        
+        picker.dismissViewControllerAnimated(true, completion: nil)
+    }
 
 }
 
