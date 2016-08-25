@@ -65,7 +65,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // Dispose of any resources that can be recreated.
     }
 
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(picker: UIImagePickerController,
+                               didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         let mediaType : String = info[UIImagePickerControllerMediaType] as! String
         var originalImage : UIImage? = nil
         
@@ -75,11 +76,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
         
         //save the new image to the Camera Roll
-//        UIImageWriteToSavedPhotosAlbum(originalImage!, nil, nil, nil)
         if let originalImage = originalImage {
             pictures.append(originalImage)
             let filteredImage = processImage(originalImage)
-            displayPicture.image = UIImage(CGImage: filteredImage)
+            UIImageWriteToSavedPhotosAlbum(UIImage(CGImage: filteredImage,
+                                                     scale: originalImage.scale,
+                                               orientation: originalImage.imageOrientation),
+                                           nil, nil, nil)
+            displayPicture.image = UIImage(CGImage: filteredImage,
+                                             scale: originalImage.scale,
+                                       orientation: originalImage.imageOrientation)
         }
         
         picker.dismissViewControllerAnimated(true, completion: nil)
@@ -90,8 +96,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let intermediateImage : CIImage? = CIImage(image: image)
         let filter : CIFilter? = CIFilter(name: "CIEdgeWork")
         filter?.setValue(intermediateImage, forKey: kCIInputImageKey)
-        filter?.setValue(4.0, forKey: kCIInputRadiusKey)
-        let resultImage : CIImage = (filter?.valueForKey(kCIOutputImageKey))! as! CIImage
+        filter?.setValue(3.0, forKey: kCIInputRadiusKey)
+        var resultImage : CIImage = (filter?.valueForKey(kCIOutputImageKey))! as! CIImage
+        let filter2 : CIFilter? = CIFilter(name: "CIExposureAdjust")
+        filter2?.setValue(resultImage, forKey: kCIInputImageKey)
+        filter2?.setValue(-3.5, forKey: kCIInputEVKey)
+        resultImage = (filter2?.valueForKey(kCIOutputImageKey))! as! CIImage
         let extent : CGRect = resultImage.extent
         let returnImage : CGImageRef = context.createCGImage(resultImage, fromRect: extent)
         return returnImage
